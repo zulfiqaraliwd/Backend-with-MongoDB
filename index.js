@@ -1,34 +1,29 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./utils/database.js";
-import User from "./model/user.model.js";
+import { db } from "./util/database.js";
 
 dotenv.config();
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
-connectDB();
+db();
 
-app.use(express.json());
+app.get("/", (req, res) => {
+  res.send("Backend is ready");
+});
 
-app.post("/users", async (req, res) => {
-  try {
-    const { name, email } = req.body;
+app.get("/user", (req, res) => {
+  res.send("It is About page");
+});
 
-    const user = await User.create({
-      name,
-      email,
-    });
-
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+app.get("/person", (req, res) => {
+  res.send({
+    name: "Ali",
+    age: 44,
+  });
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`The backend is running on ${port}`);
 });
